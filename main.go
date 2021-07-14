@@ -7,6 +7,9 @@ import (
 )
 
 func main() {
+
+	webMain()
+
 	requester, err := NewSonicRequester()
 	if err != nil {
 		fmt.Println("ERROR : ", err)
