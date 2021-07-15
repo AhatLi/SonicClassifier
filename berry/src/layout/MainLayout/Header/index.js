@@ -3,10 +3,47 @@ import React from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, Box, ButtonBase } from '@material-ui/core';
+import { useTheme } from '@material-ui/styles';
+import { Avatar, Box, ButtonBase, Card, Typography } from '@material-ui/core';
 
 // assets
 import { IconMenu2 } from '@tabler/icons';
+
+const ColorBox = ({ bgcolor, title, data, dark }) => {
+    const theme = useTheme();
+    return (
+        <React.Fragment>
+            <Card sx={{ width: '100%' }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        py: 0.5,
+                        bgcolor: bgcolor,
+                        borderRadius: '10px',
+                        margin: '5px',
+                        color: dark ? theme.palette.grey[800] : '#ffffff'
+                    }}
+                >
+                    {title && (
+                        <Typography variant="h1" color="inherit">
+                            {title}
+                        </Typography>
+                    )}
+                    {!title && <Box></Box>}
+                </Box>
+            </Card>
+        </React.Fragment>
+    );
+};
+
+ColorBox.propTypes = {
+    bgcolor: PropTypes.string,
+    title: PropTypes.string,
+    data: PropTypes.object.isRequired,
+    dark: PropTypes.bool
+};
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -25,10 +62,8 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     boxContainer: {
-        width: '228px',
         display: 'flex',
         [theme.breakpoints.down('md')]: {
-            width: 'auto'
         }
     }
 }));
@@ -37,23 +72,25 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = ({ handleLeftDrawerToggle }) => {
     const classes = useStyles();
+    const theme = useTheme();
 
     return (
         <React.Fragment>
             {/* logo & toggler button */}
             <div className={classes.boxContainer}>
-                <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-                </Box>
                 <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
                     <Avatar variant="rounded" className={classes.headerAvatar} onClick={handleLeftDrawerToggle} color="inherit">
                         <IconMenu2 stroke={1.5} size="1.3rem" />
                     </Avatar>
                 </ButtonBase>
             </div>
-
-            {/* header search */}
-            <div className={classes.grow} />
-            <div className={classes.grow} />
+            
+            <ColorBox 
+                bgcolor={theme.palette.primary.light}
+                data={{ label: 'Shade-50', color: theme.palette.primary.light }}
+                title="SonicClassifier"
+                dark
+            />
         </React.Fragment>
     );
 };
