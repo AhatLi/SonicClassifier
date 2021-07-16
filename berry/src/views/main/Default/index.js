@@ -57,9 +57,9 @@ const Main = () => {
   const classes = useStyles();
   
   const loadingPlaylist = () => {
-    axios.get('http://127.0.0.1:8080/getplaylist').then(
+    axios.get('http://127.0.0.1:9255/getPlaylist').then(
       (response) => {        
-        const words = response.data.split(',');
+        const words = response.data.split('|');
         setPlaylists(words);
       }
     ).catch(error => {
@@ -71,13 +71,25 @@ const Main = () => {
   }, []);
 
   const onClickSortSong = () => { 
-    axios.get(`http://127.0.0.1:8080/sort?playlist=${playlist}&type=${type}&item=${item}&playlist=${playlist}&order=${order}`).then(
-      (response) => {        
-        alert(response.data);
-      }
-    ).catch(error => {
-      alert(error);
-    })
+    if({type} == "star") {
+      axios.get(`http://127.0.0.1:9255/sort?sortPlaylist=${playlist}&item=${item}&order=${order}`).then(
+        (response) => {        
+          alert(response.data);
+        }
+      ).catch(error => {
+        alert(error);
+      });
+    }
+    else {
+      axios.get(`http://127.0.0.1:9255/sortStar?item=${item}&order=${order}`).then(
+        (response) => {        
+          alert(response.data);
+        }
+      ).catch(error => {
+        alert(error);
+      });
+    }
+
   }
 
   return (

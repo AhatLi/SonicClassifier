@@ -74,6 +74,26 @@ func (r *SonicRequester) GetPlaylist(pid string) Playlist {
 	return result
 }
 
+func (r *SonicRequester) GetStarred() StarredList {
+	url := r.conf.url + "/rest/getStarred?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client + "&f=json"
+	body, _ := getMessage(url)
+	var result StarredList
+	fmt.Println(string(body))
+	json.Unmarshal(body, &result)
+
+	return result
+}
+
+func (r *SonicRequester) UpdateStar(sid string) {
+	urlUnStar := r.conf.url + "/rest/unstar?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+		"&f=json&id=" + sid
+	getMessage(urlUnStar)
+
+	urlStar := r.conf.url + "/rest/star?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+		"&f=json&id=" + sid
+	getMessage(urlStar)
+}
+
 func (r *SonicRequester) UpdatePlaylist(pid string, sid string) {
 	url := r.conf.url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
 		"&f=json&playlistId=" + pid + "&songIdToAdd=" + sid + "&songIndexToRemove=0"
