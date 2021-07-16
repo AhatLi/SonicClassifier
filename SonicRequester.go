@@ -16,8 +16,6 @@ type Conf struct {
 	username string
 	passwd   string
 	url      string
-	playlist string
-	item     string
 }
 
 func (conf *Conf) initConf() error {
@@ -29,10 +27,8 @@ func (conf *Conf) initConf() error {
 	conf.username = cfg.Section("account").Key("username").String()
 	conf.passwd = cfg.Section("account").Key("passwd").String()
 	conf.url = cfg.Section("network").Key("url").String()
-	conf.playlist = cfg.Section("item").Key("playlist").String()
-	conf.item = cfg.Section("item").Key("item").String()
 
-	if conf.username == "" || conf.passwd == "" || conf.url == "" || conf.playlist == "" || conf.item == "" {
+	if conf.username == "" || conf.passwd == "" || conf.url == "" {
 		return errors.New("check config")
 	}
 

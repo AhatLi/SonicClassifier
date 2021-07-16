@@ -49,14 +49,13 @@ const Main = () => {
         height: 'calc(80vh - 210px)',
         borderColor: theme.palette.primary.light
     },
-    test: {
+    formstyle: {
         textAlign: 'center',
         width: '100%'
     }
   }));
   const classes = useStyles();
   
-
   const loadingPlaylist = () => {
     axios.get('http://127.0.0.1:8080/getplaylist').then(
       (response) => {        
@@ -70,6 +69,16 @@ const Main = () => {
   useEffect(() => {
     loadingPlaylist();
   }, []);
+
+  const onClickSortSong = () => { 
+    axios.get(`http://127.0.0.1:8080/sort?playlist=${playlist}&type=${type}&item=${item}&playlist=${playlist}&order=${order}`).then(
+      (response) => {        
+        alert(response.data);
+      }
+    ).catch(error => {
+      alert(error);
+    })
+  }
 
   return (
     <MainCard  className={classes.frame} title="Sort Your Music">
@@ -85,7 +94,7 @@ const Main = () => {
       </Grid>
       <Grid item xs={12}>
       <InputLabel id="demo-simple-select-helper-label1">Playlist</InputLabel>
-      <FormControl className={classes.test}>
+      <FormControl className={classes.formstyle}>
         <Select
         id="demo-simple-select1"
         labelId="demo-simple-select-helper-label1"
@@ -104,7 +113,7 @@ const Main = () => {
       </Grid>
       <Grid item xs={12}>
       <InputLabel id="demo-simple-select-helper-label2">Sort Item</InputLabel>
-      <FormControl className={classes.test}>
+      <FormControl className={classes.formstyle}>
           <Select
           id="demo-simple-select2"
           labelId="demo-simple-select-helper-label2"
@@ -117,8 +126,6 @@ const Main = () => {
           <MenuItem value='album'>Album</MenuItem>
           <MenuItem value='artist'>Artist</MenuItem>
           <MenuItem value='year'>Year</MenuItem>
-          <MenuItem value='genre'>Genre</MenuItem>
-          <MenuItem value='size'>Size</MenuItem>
           </Select>
       </FormControl>
       </Grid>
@@ -132,7 +139,7 @@ const Main = () => {
       </FormControl>
       </Grid>
       <Grid item xs={12}>
-      <Button variant="contained" className={classes.test}>Sort Start!</Button> 
+      <Button variant="contained" className={classes.formstyle} onClick={onClickSortSong}>Sort Start!</Button> 
       </Grid>
     </Grid>
     <hr></hr>

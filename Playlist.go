@@ -1,13 +1,12 @@
 package main
 
 type Entry struct {
-	Id      string
-	Title   string
-	Album   string
-	Artist  string
-	Uear    int
-	Path    string
-	Created string `json:"created"`
+	Id     string
+	Title  string
+	Album  string
+	Artist string
+	Year   int
+	Path   string
 }
 
 type Playlist struct {
