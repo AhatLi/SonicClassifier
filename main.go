@@ -1,3 +1,9 @@
+/*
+2021-07-16
+SonicClassifier
+v0.9.0
+*/
+
 package main
 
 import (
@@ -209,6 +215,10 @@ func main() {
 			fileServer.ServeHTTP(w, r)
 		}
 	})
+
+	fmt.Println("Server Start!")
+	fmt.Println("Connect localhost:9255")
+
 	err := http.ListenAndServe(":9255", nil)
 	if err != nil {
 		fmt.Println(err)
