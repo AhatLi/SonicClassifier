@@ -155,6 +155,9 @@ const Main = () => {
       </Grid>
     </Grid>
     <hr></hr>
+    <p style={{textAlign: 'right'}}>
+    v0.9.1
+    </p>
     </MainCard>
   );
 };
