@@ -55,9 +55,9 @@ const Main = () => {
     }
   }));
   const classes = useStyles();
-  
+    
   const loadingPlaylist = () => {
-    axios.get('http://127.0.0.1:9255/getPlaylist').then(
+    axios.get(`/getPlaylist`).then(
       (response) => {        
         const words = response.data.split('|');
         setPlaylists(words);
@@ -72,7 +72,7 @@ const Main = () => {
 
   const onClickSortSong = () => { 
     if({type} == "star") {
-      axios.get(`http://127.0.0.1:9255/sort?sortPlaylist=${playlist}&item=${item}&order=${order}`).then(
+      axios.get(`/sort?sortPlaylist=${playlist}&item=${item}&order=${order}`).then(
         (response) => {        
           alert(response.data);
         }
@@ -81,7 +81,7 @@ const Main = () => {
       });
     }
     else {
-      axios.get(`http://127.0.0.1:9255/sortStar?item=${item}&order=${order}`).then(
+      axios.get(`/sortStar?item=${item}&order=${order}`).then(
         (response) => {        
           alert(response.data);
         }

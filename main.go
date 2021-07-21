@@ -13,13 +13,9 @@ import (
 	"sort"
 )
 
-func getPlaylistHandler(w http.ResponseWriter, r *http.Request) {
-	requester, err := NewSonicRequester()
-	if err != nil {
-		fmt.Println("ERROR : ", err)
-		return
-	}
+var requester *SonicRequester
 
+func getPlaylistHandler(w http.ResponseWriter, r *http.Request) {
 	result := requester.GetPlaylists()
 	playlists := ""
 	for _, item := range result.SubsonicResponse.Playlists.Playlist {
@@ -44,13 +40,6 @@ func sortPlaylistHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if pPlaylist == "" {
 		fmt.Println("ERROR : playlist error")
-		fmt.Fprintf(w, "Fail")
-		return
-	}
-
-	requester, err := NewSonicRequester()
-	if err != nil {
-		fmt.Println("ERROR : ", err)
 		fmt.Fprintf(w, "Fail")
 		return
 	}
@@ -134,13 +123,6 @@ func sortStarHandler(w http.ResponseWriter, r *http.Request) {
 		pItem = "path"
 	}
 
-	requester, err := NewSonicRequester()
-	if err != nil {
-		fmt.Println("ERROR : ", err)
-		fmt.Fprintf(w, "Fail")
-		return
-	}
-
 	result := requester.GetStarred()
 	entry := make([]Entry, 0)
 
@@ -202,6 +184,7 @@ func sortStarHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	requester = NewSonicRequester()
 	http.HandleFunc("/getPlaylist", getPlaylistHandler)
 	http.HandleFunc("/sortPlaylist", sortPlaylistHandler)
 	http.HandleFunc("/sortStar", sortStarHandler)
