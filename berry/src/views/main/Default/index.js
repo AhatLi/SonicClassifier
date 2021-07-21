@@ -72,7 +72,7 @@ const Main = () => {
 
   const onClickSortSong = () => { 
     if({type} == "star") {
-      axios.get(`/sort?sortPlaylist=${playlist}&item=${item}&order=${order}`).then(
+      axios.get(`/sortStar?item=${item}&order=${order}`).then(
         (response) => {        
           alert(response.data);
         }
@@ -81,7 +81,7 @@ const Main = () => {
       });
     }
     else {
-      axios.get(`/sortStar?item=${item}&order=${order}`).then(
+      axios.get(`/sortPlaylist?playlist=${playlist}&item=${item}&order=${order}`).then(
         (response) => {        
           alert(response.data);
         }
