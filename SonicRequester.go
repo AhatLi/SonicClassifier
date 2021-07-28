@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strings"
 
 	"gopkg.in/ini.v1"
 )
@@ -54,6 +55,13 @@ func NewSonicRequester() *SonicRequester {
 	requester.token = fmt.Sprintf("%x", md5.Sum([]byte(requester.conf.passwd+requester.salt)))
 
 	return requester
+}
+
+func (r *SonicRequester) CheckConnection() bool {
+	url := r.conf.sonic_url + "/rest/ping?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client + "&f=json"
+	res, _ := getMessage(url)
+
+	return strings.Contains(string(res), "\"ok\"")
 }
 
 func (r *SonicRequester) GetPlaylists() Playlists {

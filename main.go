@@ -9,6 +9,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"regexp"
 	"sort"
 )
@@ -185,6 +186,14 @@ func sortStarHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	requester = NewSonicRequester()
+
+	if requester.CheckConnection() {
+		fmt.Println("sonic server connection success [" + requester.conf.sonic_url + "]")
+	} else {
+		fmt.Println("sonic server connection refused [" + requester.conf.sonic_url + "]")
+		os.Exit(0)
+	}
+
 	http.HandleFunc("/getPlaylist", getPlaylistHandler)
 	http.HandleFunc("/sortPlaylist", sortPlaylistHandler)
 	http.HandleFunc("/sortStar", sortStarHandler)

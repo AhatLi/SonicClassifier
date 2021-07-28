@@ -71,7 +71,7 @@ const Main = () => {
   }, []);
 
   const onClickSortSong = () => { 
-    if({type} == "star") {
+    if({type}.type === "star") {
       axios.get(`/sortStar?item=${item}&order=${order}`).then(
         (response) => {        
           alert(response.data);
