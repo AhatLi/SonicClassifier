@@ -105,23 +105,27 @@ const Main = () => {
       </FormControl>
       </Grid>
       <Grid item xs={12}>
-      <InputLabel id="demo-simple-select-helper-label1">Playlist</InputLabel>
-      <FormControl className={classes.formstyle}>
-        <Select
-        id="demo-simple-select1"
-        labelId="demo-simple-select-helper-label1"
-        value={playlist}
-        onChange={handleChangePlaylist}
-        inputProps={{ 'aria-label': 'Without label' }}
-        >
-        <MenuItem value="Select Playlist" disabled>Select Playlist</MenuItem>
-        {playlists.map((item, i) => (
-          <MenuItem key={i} value={item}>
-            {item}
-          </MenuItem>
-        ))}
-        </Select>
-      </FormControl>
+        {type==='star'?'':
+        <div>
+          <InputLabel id="demo-simple-select-helper-label1">Playlist</InputLabel>
+          <FormControl className={classes.formstyle}>
+            <Select
+            id="demo-simple-select1"
+            labelId="demo-simple-select-helper-label1"
+            value={playlist}
+            onChange={handleChangePlaylist}
+            inputProps={{ 'aria-label': 'Without label' }}
+            >
+            <MenuItem value="Select Playlist" disabled>Select Playlist</MenuItem>
+            {playlists.map((item, i) => (
+              <MenuItem key={i} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+            </Select>
+          </FormControl>
+        </div>
+        }
       </Grid>
       <Grid item xs={12}>
       <InputLabel id="demo-simple-select-helper-label2">Sort Item</InputLabel>

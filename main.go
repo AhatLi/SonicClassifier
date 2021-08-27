@@ -106,9 +106,7 @@ func sortPlaylistHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	for _, e := range entry {
-		requester.UpdatePlaylist(pid, e.Id)
-	}
+	requester.UpdatePlaylist(pid, entry)
 
 	fmt.Fprintf(w, "OK")
 }
@@ -177,9 +175,7 @@ func sortStarHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	for _, e := range entry {
-		requester.UpdateStar(e.Id)
-	}
+	requester.UpdateStar(entry)
 
 	fmt.Fprintf(w, "OK")
 }

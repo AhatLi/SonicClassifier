@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"gopkg.in/ini.v1"
@@ -86,26 +87,77 @@ func (r *SonicRequester) GetStarred() StarredList {
 	url := r.conf.sonic_url + "/rest/getStarred?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client + "&f=json"
 	body, _ := getMessage(url)
 	var result StarredList
-	fmt.Println(string(body))
 	json.Unmarshal(body, &result)
 
 	return result
 }
 
-func (r *SonicRequester) UpdateStar(sid string) {
-	urlUnStar := r.conf.sonic_url + "/rest/unstar?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
-		"&f=json&id=" + sid
-	getMessage(urlUnStar)
+//크롬 기준으로 3000개의 음악에 대한 정렬이 실패했다...
+//그래도 500개 까지는 문제 없을것 같아 500개씩 모아서 처리하도록 수정한다.
+func (r *SonicRequester) UpdateStar(entry []Entry) {
+	sid := ""
+	for i, e := range entry {
+		sid += "&id=" + e.Id
 
-	urlStar := r.conf.sonic_url + "/rest/star?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
-		"&f=json&id=" + sid
-	getMessage(urlStar)
+		if i%500 == 0 {
+			urlUnStar := r.conf.sonic_url + "/rest/unstar?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+				"&f=json" + sid
+			getMessage(urlUnStar)
+
+			urlStar := r.conf.sonic_url + "/rest/star?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+				"&f=json" + sid
+			getMessage(urlStar)
+
+			sid = ""
+		}
+	}
+	if len(sid) != 0 {
+		urlUnStar := r.conf.sonic_url + "/rest/unstar?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+			"&f=json" + sid
+		getMessage(urlUnStar)
+
+		urlStar := r.conf.sonic_url + "/rest/star?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+			"&f=json" + sid
+		getMessage(urlStar)
+	}
 }
 
-func (r *SonicRequester) UpdatePlaylist(pid string, sid string) {
-	url := r.conf.sonic_url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
-		"&f=json&playlistId=" + pid + "&songIdToAdd=" + sid + "&songIndexToRemove=0"
-	getMessage(url)
+func (r *SonicRequester) UpdatePlaylist(pid string, entry []Entry) {
+	remove := ""
+	add := ""
+	//remove
+	for i, _ := range entry {
+		remove += "&songIndexToRemove=" + strconv.Itoa(i)
+		if i%500 == 0 {
+			removeURL := r.conf.sonic_url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+				"&f=json&playlistId=" + pid + remove
+			getMessage(removeURL)
+			remove = ""
+		}
+	}
+
+	if len(remove) != 0 {
+		removeURL := r.conf.sonic_url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+			"&f=json&playlistId=" + pid + remove
+		getMessage(removeURL)
+	}
+
+	//add
+	for i, e := range entry {
+		add += "&songIdToAdd=" + e.Id
+		if i%500 == 0 {
+			addURL := r.conf.sonic_url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+				"&f=json&playlistId=" + pid + add
+			getMessage(addURL)
+			add = ""
+		}
+	}
+
+	if len(remove) != 0 && len(add) != 0 {
+		addURL := r.conf.sonic_url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
+			"&f=json&playlistId=" + pid + add
+		getMessage(addURL)
+	}
 }
 
 func RandomString(n int) string {
