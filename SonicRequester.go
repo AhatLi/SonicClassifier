@@ -123,17 +123,17 @@ func (r *SonicRequester) UpdateStar(entry []Entry) {
 }
 
 func (r *SonicRequester) UpdatePlaylist(pid string, entry []Entry) {
+
 	remove := ""
-	add := ""
 	//remove
 	for i, _ := range entry {
-		remove += "&songIndexToRemove=" + strconv.Itoa(i)
-		if i%500 == 0 {
+		if i != 0 && i%100 == 0 {
 			removeURL := r.conf.sonic_url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
 				"&f=json&playlistId=" + pid + remove
 			getMessage(removeURL)
 			remove = ""
 		}
+		remove += "&songIndexToRemove=" + strconv.Itoa(i%100)
 	}
 
 	if len(remove) != 0 {
@@ -143,17 +143,18 @@ func (r *SonicRequester) UpdatePlaylist(pid string, entry []Entry) {
 	}
 
 	//add
+	add := ""
 	for i, e := range entry {
-		add += "&songIdToAdd=" + e.Id
-		if i%500 == 0 {
+		if i != 0 && i%100 == 0 {
 			addURL := r.conf.sonic_url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
 				"&f=json&playlistId=" + pid + add
 			getMessage(addURL)
 			add = ""
 		}
+		add += "&songIdToAdd=" + e.Id
 	}
 
-	if len(remove) != 0 && len(add) != 0 {
+	if len(add) != 0 {
 		addURL := r.conf.sonic_url + "/rest/updatePlaylist?u=" + r.conf.username + "&t=" + string(r.token[:]) + "&s=" + r.salt + "&v=1.15.0&c=" + r.client +
 			"&f=json&playlistId=" + pid + add
 		getMessage(addURL)
