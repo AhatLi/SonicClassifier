@@ -15,9 +15,10 @@ import (
 )
 
 type Conf struct {
-	username  string
-	passwd    string
-	sonic_url string
+	username     string
+	passwd       string
+	sonic_url    string
+	cors_disable bool
 }
 
 func (conf *Conf) initConf() error {
@@ -29,6 +30,10 @@ func (conf *Conf) initConf() error {
 	conf.username = cfg.Section("account").Key("username").String()
 	conf.passwd = cfg.Section("account").Key("passwd").String()
 	conf.sonic_url = cfg.Section("network").Key("sonic_url").String()
+	conf.cors_disable, err = cfg.Section("network").Key("cors_disable").Bool()
+	if err != nil {
+		conf.cors_disable = true
+	}
 
 	if conf.username == "" || conf.passwd == "" || conf.sonic_url == "" {
 		return errors.New("check config")

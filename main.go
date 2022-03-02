@@ -26,6 +26,10 @@ func getPlaylistHandler(w http.ResponseWriter, r *http.Request) {
 		playlists = playlists[1:]
 	}
 
+	if requester.conf.cors_disable {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}
 	fmt.Fprintf(w, playlists)
 }
 
@@ -108,6 +112,10 @@ func sortPlaylistHandler(w http.ResponseWriter, r *http.Request) {
 
 	requester.UpdatePlaylist(pid, entry)
 
+	if requester.conf.cors_disable {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}
 	fmt.Fprintf(w, "OK")
 }
 
@@ -177,6 +185,10 @@ func sortStarHandler(w http.ResponseWriter, r *http.Request) {
 
 	requester.UpdateStar(entry)
 
+	if requester.conf.cors_disable {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}
 	fmt.Fprintf(w, "OK")
 }
 
