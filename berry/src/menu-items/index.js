@@ -4,7 +4,7 @@ import { utilities } from './utilities';
 //-----------------------|| MENU ITEMS ||-----------------------//
 
 const menuItems = {
-    items: [main, utilities]
+    items: [main]
 };
 
 export default menuItems;
