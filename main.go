@@ -1,7 +1,7 @@
 /*
 2022-09-17
 SonicClassifier
-v0.9.2
+v 0.9.2
 */
 
 package main
