@@ -1,7 +1,7 @@
 /*
-2021-07-21
+2022-09-17
 SonicClassifier
-v0.9.1
+v0.9.2
 */
 
 package main
@@ -193,7 +193,12 @@ func sortStarHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	requester = NewSonicRequester()
+	var configErr error
+	requester, configErr = NewSonicRequester()
+	if configErr != nil {
+		fmt.Println("sonic config error [" + configErr.Error() + "]")
+		os.Exit(0)
+	}
 
 	if requester.CheckConnection() {
 		fmt.Println("sonic server connection success [" + requester.conf.sonic_url + "]")

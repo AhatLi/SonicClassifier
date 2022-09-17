@@ -49,18 +49,18 @@ type SonicRequester struct {
 	token  string
 }
 
-func NewSonicRequester() *SonicRequester {
+func NewSonicRequester() (*SonicRequester, error) {
 	requester := &SonicRequester{}
 	err := requester.conf.initConf()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	requester.client = "CLI"
 	requester.salt = RandomString(20)
 	requester.token = fmt.Sprintf("%x", md5.Sum([]byte(requester.conf.passwd+requester.salt)))
 
-	return requester
+	return requester, nil
 }
 
 func (r *SonicRequester) CheckConnection() bool {
